@@ -1,31 +1,23 @@
-"use strict";
-// classes
-var Invoice = /** @class */ (function () {
-    function Invoice(client, details, amount) {
-        this.client = client;
-        this.details = details;
-        this.amount = amount;
-    }
-    Invoice.prototype.format = function () {
-        return '${this.client} owes ${this.amount}€ for ${this.details}';
-    };
-    return Invoice;
-}());
-var invOne = new Invoice('mario', 'work on the mario website', 250);
-var invTwo = new Invoice('luigi', 'work on the luigi website', 300);
-var invoices = [];
-invoices.push(invOne);
-invoices.push(invTwo);
-invoices.push(new Invoice('mario', 'work on the mario website', 250));
-invOne.client = 'yoshi';
-console.log(invoices);
-var form = document.querySelector('.new-item-form');
+import { Invoice } from './modules/Invoice.js';
+import { Payment } from './modules/Payment.js';
+import { ListTemplate } from './modules/ListTemplate.js';
+const form = document.querySelector('.new-item-form');
 // Inputs
-var type = document.querySelector('#type');
-var tofrom = document.querySelector('#tofrom');
-var details = document.querySelector('#details');
-var amount = document.querySelector('#amount');
-form.addEventListener('submit', function (e) {
+const type = document.querySelector('#type');
+const tofrom = document.querySelector('#tofrom');
+const details = document.querySelector('#details');
+const amount = document.querySelector('#amount');
+// list template instance
+const ul = document.querySelector('ul');
+const list = new ListTemplate(ul);
+form.addEventListener('submit', (e) => {
     e.preventDefault();
-    console.log(type.value, tofrom.value, details.value, amount.valueAsNumber);
+    let doc;
+    if (type.value === 'invoice') {
+        doc = new Invoice(tofrom.value, details.value, amount.valueAsNumber);
+    }
+    else {
+        doc = new Payment(tofrom.value, details.value, amount.valueAsNumber);
+    }
+    list.render(doc, type.value, 'end');
 });
